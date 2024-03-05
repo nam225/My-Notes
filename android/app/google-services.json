@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744951945641",
+    "project_id": "mynotes-flutter-cunam",
+    "storage_bucket": "mynotes-flutter-cunam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744951945641:android:54e61180d086436d34ccb8",
+        "android_client_info": {
+          "package_name": "com.cunam.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA31b7TbMz8uoY0PrxSCjuZmtOSduo5mj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
