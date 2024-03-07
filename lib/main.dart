@@ -1,14 +1,17 @@
+// ignore: unused_import
+import 'dart:developer' as developer show log;
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
 import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/view/login_view.dart';
 import 'package:mynotes/view/register_view.dart';
 import 'package:mynotes/view/verify_email_view.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:mynotes/view/login_view.dart';
+
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       title: 'Flutter Demo',
@@ -18,10 +21,11 @@ void main() {
       ),
       home: const HomePage(),
       routes: {
-        '/login/' : (context) => const LoginView(),
-        '/register/' :(context) => const RegisterView(),
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
       },
-    ),);
+    ),
+  );
 }
 
 class HomePage extends StatelessWidget {
@@ -30,29 +34,94 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch(snapshot.connectionState){
-            case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if(user != null){
-                if(user.emailVerified){
-                  print("Email is verified");
-                }else{
-                  return const VerifyEmailView();
-                }
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                return const NotesView();
+              } else {
+                return const VerifyEmailView();
               }
-              else{
-                return const LoginView();
-              }
-              return const Text("Done");
-            default:
-              return const CircularProgressIndicator();
-          }
-        },  
-      );
+            } else {
+              return const LoginView();
+            }
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
+    );
   }
 }
 
+enum MenuAction { logout }
+
+class NotesView extends StatefulWidget {
+  const NotesView({super.key});
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Main UI"), actions: [
+        PopupMenuButton<MenuAction>(
+          onSelected: (value) async {
+            switch (value) {
+              case MenuAction.logout:
+                final shouldLogout = await showLogOutDialog(context);
+                if (shouldLogout) {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login/', 
+                    (_) => false
+                  );
+                }
+                break;
+            }
+          },
+          itemBuilder: (context) {
+            return const [
+              PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout, child: Text("Logout")),
+            ];
+          },
+        )
+      ]),
+      body: const Text("hello nam"),
+    );
+  }
+}
+
+Future<bool> showLogOutDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Sign out"),
+        content: const Text("Are you want to sign out?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: const Text("Log out"),
+          ),
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
+}
