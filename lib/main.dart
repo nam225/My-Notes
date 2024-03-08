@@ -1,5 +1,5 @@
 // ignore: unused_import
-import 'dart:developer' as developer show log;
+import 'dart:developer' as devtools show log;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +23,7 @@ void main() {
       routes: {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
+        '/notes/' :(context) => const NotesView(),
       },
     ),
   );
