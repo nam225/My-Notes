@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/enum/menu_action.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/crud/note_service.dart';
-import 'package:mynotes/view/constants/routes.dart';
+import 'package:mynotes/constants/routes.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -31,7 +31,13 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Main UI"), actions: [
+      appBar: AppBar(title: const Text("Your notes"), actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(newNoteRoute);
+          },
+          icon: const Icon(Icons.add),
+        ),
         PopupMenuButton<MenuAction>(
           onSelected: (value) async {
             switch (value) {
@@ -60,8 +66,8 @@ class _NotesViewState extends State<NotesView> {
             case ConnectionState.done:
               return StreamBuilder(
                 stream: _notesService.allNotes,
-                builder: (context, snapshot){
-                  switch (snapshot.connectionState){
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                       return const Text("Waiting for all notes...");
                     default:
