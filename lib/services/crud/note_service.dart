@@ -227,7 +227,6 @@ class NotesService {
     try{
       await open();
     } on DatabaseAlreaddyOpenException {
-      print("hi");
     }
   }
   Future<void> open() async {
