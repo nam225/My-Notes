@@ -13,7 +13,6 @@ class NotesService {
 
   List<DatabaseNote> _notes = [];
 
-  // ignore: unused_field
   DatabaseUser? _user;
 
   static final NotesService _shared = NotesService._sharedInstance();
