@@ -99,7 +99,7 @@ class MockAuthProvider extends AuthProvider {
   }) {
     if (!isInitialized) throw NotInitializedException();
     if (email == "foobar@gmail.com" || password == "foobar") {
-      throw InvalidCredentialAuthException();
+      throw InvalidCredentialAuthException(); 
     }
     const user = AuthUser(
       isEmailVerified: false,
@@ -129,5 +129,10 @@ class MockAuthProvider extends AuthProvider {
       id: 'my_id',
     );
     _user = newUser;
+  }
+  
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) {
+    throw UnimplementedError();
   }
 }
